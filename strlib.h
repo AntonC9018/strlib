@@ -89,6 +89,25 @@ str_view_t str_trim_front(str_view_t str, char to_trim = ' ');
 // Returns a pointer to the character with highest value.
 const char* str_max_char(str_view_t str);
 
+inline bool str_has_char(str_t str, char ch)
+{
+    return strchr(str.chars, ch) == 0;
+}
+
+inline bool str_has_char(str_view_t str, char ch)
+{
+    return strchr(str.chars, ch) == 0;
+}
+
+inline char* str_find_char(str_t str, char ch)
+{
+    return strchr(str.chars, ch);
+}
+
+inline const char* str_find_char(str_view_t str, char ch)
+{
+    return strchr(str.chars, ch);
+}
 
 struct str_builder_t
 {
