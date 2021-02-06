@@ -46,6 +46,21 @@ inline char* str_alloc_buffer(size_t length)
     return data;
 }
 
+// Allocates a buffer, filling it with 0, and wraps it in a string
+inline str_t str_make_zeros(size_t length)
+{
+    return { str_calloc_buffer(length), length };
+}
+// Allocates a buffer, and null terminates it
+inline str_t str_make(size_t length)
+{
+    return { str_alloc_buffer(length), length };
+}
+// Allocates a buffer but leaves all the garbage in it
+inline str_t make_unitialized(size_t length)
+{
+    return { str_malloc_buffer(length), length };
+}
 // Allocates a buffer big enough to hold the source string.
 // Copies the source string into that buffer.
 str_t str_copy(str_t source);
