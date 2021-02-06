@@ -5,7 +5,7 @@ char& str_t::operator[](size_t index)
     return chars[index];
 }
 
-char str_view_t::operator[](size_t index)
+char str_view_t::operator[](size_t index) const
 {
     return chars[index];
 }

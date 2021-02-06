@@ -10,7 +10,7 @@ struct str_view_t
     const char* chars; // A null terminated char array.
     size_t length;     // Size of the data buffer, excluding the null character.
 
-    char operator[](size_t index);
+    char operator[](size_t index) const;
 };
 
 struct str_t
