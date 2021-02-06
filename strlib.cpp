@@ -1,5 +1,10 @@
 #include "strlib.h"
 
+char& str_t::operator[](size_t index)
+{
+    return chars[index];
+}
+
 str_t str_copy(str_t source)
 {
     return str_copy(source.chars, source.length); 
