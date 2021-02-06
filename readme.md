@@ -1,8 +1,8 @@
-# strlib - A c-style string library for c++
+# strlib - A C-style string library for C++
 
-`strlib` is a really simple library for c-style string manipulation in c++. Includes types for a string with a malloc-ed buffer `str_t`, a string view `str_view_t` (either over literal or over a str_t) and a string builder `str_builder_t` and some useful methods over that.
+`strlib` is a really simple library for C-style string manipulation in C++. Includes types for a string with a malloc-ed buffer `str_t`, a string view `str_view_t` (either over literal or over a str_t) and a string builder `str_builder_t` and some useful functions over that.
 
-Every string is both null terminated and has a length field, which makes it very comfortable to use with c's string.h functions.
+Every string is both null terminated and has a length field, which makes it very comfortable to use with C's string.h functions.
 
 ## Demo
 
