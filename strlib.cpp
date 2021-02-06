@@ -8,14 +8,14 @@ str_t str_copy(str_t source)
 str_t str_copy(const char* source)
 {
     size_t length = strlen(source);
-    char* chars = str_malloc_buffer(length + 1);
+    char* chars = str_malloc_buffer(length);
     memcpy(chars, source, length);
     return { chars, length };
 }
 
 str_t str_copy(const char* source, size_t length)
 {
-    char* data = str_malloc_buffer(length + 1);
+    char* data = str_malloc_buffer(length);
     memcpy(data, source, length + 1);
     return { data, length };
 }
