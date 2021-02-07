@@ -21,7 +21,7 @@ struct str_t
     char &operator[](size_t index);
 };
 
-
+#define STR_NULL { NULL, 0 }
 
 inline void str_free(str_t str)
 {
