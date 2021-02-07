@@ -135,10 +135,6 @@ void strb_cat_until(str_builder_t& sb, const char* src, char stop);
 // void strb_trim_front(str_builder_t& sb, char to_trim = ' ');
 void strb_trim_back(str_builder_t& sb, char to_trim = ' ');
 str_t strb_build(str_builder_t& sb);
-
-inline bool strb_has_char(str_builder_t& sb, char ch)
-{
-    return strchr(sb.chars, ch) != 0;
-}
+bool strb_has_char(str_builder_t& sb, char ch);
 
 #endif

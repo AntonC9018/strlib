@@ -139,3 +139,15 @@ str_t strb_build(str_builder_t& sb)
     strb_null_terminate(sb);
     return { sb.chars, sb.char_count };
 }
+
+bool strb_has_char(str_builder_t& sb, char ch)
+{
+    for (size_t i = 0; i < sb.char_count; i++)
+    {
+        if (sb.chars[i] == ch)
+        {
+            return true;
+        }
+    }
+    return false;
+}
