@@ -19,6 +19,7 @@ struct str_t
     size_t length;     // Size of the data buffer, excluding the null character.
 
     char &operator[](size_t index);
+    char operator[](size_t index) const;
 };
 
 #define STR_NULL { NULL, 0 }
