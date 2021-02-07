@@ -30,8 +30,8 @@ str_t str_copy(const char* source)
 
 str_t str_copy(const char* source, size_t length)
 {
-    char* data = str_malloc_buffer(length);
-    memcpy(data, source, length + 1);
+    char* data = str_alloc_buffer(length);
+    memcpy(data, source, length);
     return { data, length };
 }
 
