@@ -19,7 +19,7 @@ str_t str_copy(const char* source)
 {
     size_t length = strlen(source);
     char* chars = str_malloc_buffer(length);
-    memcpy(chars, source, length);
+    memcpy(chars, source, length + 1);
     return { chars, length };
 }
 

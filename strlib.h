@@ -109,6 +109,13 @@ inline const char* str_find_char(str_view_t str, char ch)
     return strchr(str.chars, ch);
 }
 
+inline size_t str_find_char_index(str_view_t str, char ch)
+{
+    const char* p = strchr(str.chars, ch);
+    return p != NULL ? p - str.chars : -1;
+}
+
+
 struct str_builder_t
 {
     char* chars;
