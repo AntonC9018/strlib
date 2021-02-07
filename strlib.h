@@ -124,7 +124,7 @@ struct str_builder_t
     size_t capacity;
 };
 
-str_builder_t strb_create(size_t size = 64);
+str_builder_t strb_make(size_t size = 64);
 str_builder_t strb_from(str_view_t str);
 void strb_free(str_builder_t& sb);
 void strb_cat(str_builder_t& sb, const char* src);

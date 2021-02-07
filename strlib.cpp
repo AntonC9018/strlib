@@ -62,7 +62,7 @@ const char* str_max_char(str_view_t str)
 }
 
 
-str_builder_t strb_create(size_t length)
+str_builder_t strb_make(size_t length)
 {
     char* data = str_malloc_buffer(length);
     return { data, 0, length };
