@@ -2,6 +2,8 @@
 #define STRLIB_INCLUDE 1
 #include <stdlib.h>
 #include <string.h>
+#include <functional>
+#include <algorithm>
 
 // String with static literal as its buffer or points at another str_t's buffer.
 // Should not be freed.
@@ -11,6 +13,7 @@ struct str_view_t
     size_t length;     // Size of the data buffer, excluding the null character.
 
     char operator[](size_t index) const;
+    bool operator<(str_view_t v) const;
 };
 
 struct str_t
@@ -20,6 +23,7 @@ struct str_t
 
     char &operator[](size_t index);
     char operator[](size_t index) const;
+    bool operator<(str_t v) const;
 };
 
 #define STR_NULL { NULL, 0 }
@@ -27,7 +31,7 @@ struct str_t
 inline void str_free(str_t str)
 {
     free((void*)str.chars);
-}
+}   
 
 // Allocates length bytes and fills them with zeros.
 inline char* str_calloc_buffer(size_t length)
@@ -90,32 +94,33 @@ str_view_t str_trim_front(str_view_t str, char to_trim = ' ');
 // Returns a pointer to the character with highest value.
 const char* str_max_char(str_view_t str);
 
-inline bool str_has_char(str_t str, char ch)
-{
-    return strchr(str.chars, ch) != 0;
-}
-
-inline bool str_has_char(str_view_t str, char ch)
-{
-    return strchr(str.chars, ch) != 0;
-}
-
 inline char* str_find_char(str_t str, char ch)
 {
-    return strchr(str.chars, ch);
+    return (char*) memchr(str.chars, ch, str.length);
 }
 
 inline const char* str_find_char(str_view_t str, char ch)
 {
-    return strchr(str.chars, ch);
+    return (const char*) memchr(str.chars, ch, str.length);
+}
+
+inline bool str_has_char(str_t str, char ch)
+{
+    return str_find_char(str, ch) != 0;
+}
+
+inline bool str_has_char(str_view_t str, char ch)
+{
+    return str_find_char(str, ch) != 0;
 }
 
 inline size_t str_find_char_index(str_view_t str, char ch)
 {
-    const char* p = strchr(str.chars, ch);
+    const char* p = str_find_char(str, ch);
     return p != NULL ? p - str.chars : -1;
 }
 
+int str_compare(str_view_t str1, str_view_t str2);
 
 struct str_builder_t
 {
@@ -123,6 +128,20 @@ struct str_builder_t
     size_t char_count;
     size_t capacity;
 };
+
+#define FNV_HASH_64_OFFSET_BASIS 14695981039346656037
+#define FNV_HASH_32_OFFSET_BASIS 2166136261
+#define FNV_HASH_64_PRIME        1099511628211
+#define FNV_HASH_32_PRIME        16777619
+
+// TODO: figure out if size_t has 
+// #define FNV_HASH(size) const size_t FNV_HASH_OFFSET_BASIS = FNV_HASH_#size_OFFSET_BASIS, \
+//                                     FNV_HASH_PRIME        = FNV_HASH_#size_PRIME
+
+// FNV_HASH(sizeof(size_t) * 8);
+
+const size_t FNV_HASH_OFFSET_BASIS = FNV_HASH_32_OFFSET_BASIS;
+const size_t FNV_HASH_PRIME        = FNV_HASH_32_PRIME;
 
 str_builder_t strb_make(size_t size = 64);
 str_builder_t strb_from(str_view_t str);

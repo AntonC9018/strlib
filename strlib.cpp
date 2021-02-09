@@ -10,6 +10,16 @@ char str_t::operator[](size_t index) const
     return chars[index];
 }
 
+bool str_t::operator<(str_t v) const
+{
+    return str_view(v) < str_view(*this);
+}
+
+bool str_view_t::operator<(str_view_t v) const
+{
+    return str_compare(*this, v) < 0;
+}
+
 char str_view_t::operator[](size_t index) const
 {
     return chars[index];
@@ -150,4 +160,51 @@ bool strb_has_char(str_builder_t& sb, char ch)
         }
     }
     return false;
+}
+
+int str_compare(str_view_t str1, str_view_t str2)
+{
+    if (str1.length == str2.length)
+    {
+        if (str1.chars == str2.chars)
+            return 0;
+        return memcmp(str1.chars, str2.chars, str1.length);
+    }
+    return str1.length - str2.length;
+}
+
+namespace std
+{
+    template<> 
+    struct hash<str_view_t>
+    {
+        size_t operator()(str_view_t str) const noexcept
+        {
+            size_t h = FNV_HASH_OFFSET_BASIS;
+            size_t last_size_index = std::max(str.length - sizeof(size_t), (size_t)0);
+            for (size_t i = 0; i < last_size_index; i += sizeof(size_t))
+            {
+                h ^= *(size_t*)(str.chars + i);
+                h *= FNV_HASH_PRIME;
+            }
+            for (size_t i = last_size_index; i < str.length; i++)
+            {
+                h ^= (size_t)(str.chars[i]) << i * 8;
+            }
+            if (last_size_index > 0)
+            {
+                h *= FNV_HASH_PRIME;
+            }
+            return h;
+        }
+    };
+
+    template<> 
+    struct hash<str_t>
+    {
+        size_t operator()(str_t str) const noexcept
+        {
+            return hash<str_view_t>()(str_view(str));
+        }
+    };
 }
