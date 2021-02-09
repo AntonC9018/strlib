@@ -89,6 +89,7 @@ void strb_double_buffer(str_builder_t& sb)
     memcpy(data, sb.chars, sb.char_count);
     free(sb.chars);
     sb.chars = data;
+    sb.capacity = sb.capacity * 2;
 }
 
 #define maybe_double(sb) if \
