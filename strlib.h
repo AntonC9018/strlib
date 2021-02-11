@@ -33,6 +33,11 @@ inline void str_free(str_t str)
     free((void*)str.chars);
 }   
 
+inline bool str_is_null(str_t str)
+{
+    return str.chars == 0;
+}
+
 // Allocates length bytes and fills them with zeros.
 inline char* str_calloc_buffer(size_t length)
 {
