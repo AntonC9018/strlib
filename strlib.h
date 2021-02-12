@@ -122,7 +122,7 @@ inline bool str_has_char(str_view_t str, char ch)
 inline size_t str_find_char_index(str_view_t str, char ch)
 {
     const char* p = str_find_char(str, ch);
-    return p != NULL ? p - str.chars : -1;
+    return p != NULL ? p - str.chars : (size_t)-1;
 }
 
 int str_compare(str_view_t str1, str_view_t str2);
@@ -140,7 +140,7 @@ struct str_builder_t
 #define FNV_HASH_32_PRIME        16777619
 
 // TODO: figure out if size_t has 
-// #define FNV_HASH(size) const size_t FNV_HASH_OFFSET_BASIS = FNV_HASH_#size_OFFSET_BASIS, \
+// #define FNV_HASH(size) const size_t FNV_HASH_OFFSET_BASIS = FNV_HASH_#size_OFFSET_BASIS,
 //                                     FNV_HASH_PRIME        = FNV_HASH_#size_PRIME
 
 // FNV_HASH(sizeof(size_t) * 8);
