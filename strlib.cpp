@@ -30,6 +30,11 @@ str_t str_copy(str_t source)
     return str_copy(source.chars, source.length); 
 }
 
+str_t str_copy(str_view_t source)
+{
+    return str_copy(source.chars, source.length); 
+}
+
 str_t str_copy(const char* source)
 {
     size_t length = strlen(source);

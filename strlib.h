@@ -139,14 +139,8 @@ struct str_builder_t
 #define FNV_HASH_64_PRIME        1099511628211
 #define FNV_HASH_32_PRIME        16777619
 
-// TODO: figure out if size_t has 
-// #define FNV_HASH(size) const size_t FNV_HASH_OFFSET_BASIS = FNV_HASH_#size_OFFSET_BASIS,
-//                                     FNV_HASH_PRIME        = FNV_HASH_#size_PRIME
-
-// FNV_HASH(sizeof(size_t) * 8);
-
-const size_t FNV_HASH_OFFSET_BASIS = FNV_HASH_32_OFFSET_BASIS;
-const size_t FNV_HASH_PRIME        = FNV_HASH_32_PRIME;
+const size_t FNV_HASH_OFFSET_BASIS = (sizeof(size_t) == 8) ? FNV_HASH_64_OFFSET_BASIS : FNV_HASH_32_OFFSET_BASIS;
+const size_t FNV_HASH_PRIME        = (sizeof(size_t) == 8) ? FNV_HASH_64_PRIME : FNV_HASH_32_PRIME;;
 
 size_t str_hash(str_view_t str);
 
