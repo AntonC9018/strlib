@@ -174,6 +174,26 @@ int str_compare(str_view_t str1, str_view_t str2)
     return str1.length - str2.length;
 }
 
+size_t str_hash(str_view_t str)
+{
+    size_t h = FNV_HASH_OFFSET_BASIS;
+    size_t last_size_index = std::max(str.length - sizeof(size_t), (size_t)0);
+    for (size_t i = 0; i < last_size_index; i += sizeof(size_t))
+    {
+        h ^= *(size_t*)(str.chars + i);
+        h *= FNV_HASH_PRIME;
+    }
+    for (size_t i = last_size_index; i < str.length; i++)
+    {
+        h ^= (size_t)(str.chars[i]) << i * 8;
+    }
+    if (last_size_index > 0)
+    {
+        h *= FNV_HASH_PRIME;
+    }
+    return h;
+}
+
 namespace std
 {
     template<> 
@@ -181,22 +201,7 @@ namespace std
     {
         size_t operator()(str_view_t str) const noexcept
         {
-            size_t h = FNV_HASH_OFFSET_BASIS;
-            size_t last_size_index = std::max(str.length - sizeof(size_t), (size_t)0);
-            for (size_t i = 0; i < last_size_index; i += sizeof(size_t))
-            {
-                h ^= *(size_t*)(str.chars + i);
-                h *= FNV_HASH_PRIME;
-            }
-            for (size_t i = last_size_index; i < str.length; i++)
-            {
-                h ^= (size_t)(str.chars[i]) << i * 8;
-            }
-            if (last_size_index > 0)
-            {
-                h *= FNV_HASH_PRIME;
-            }
-            return h;
+            return str_hash(str);
         }
     };
 
@@ -205,7 +210,7 @@ namespace std
     {
         size_t operator()(str_t str) const noexcept
         {
-            return hash<str_view_t>()(str_view(str));
+            return str_hash(str_view(str));
         }
     };
 }

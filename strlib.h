@@ -148,6 +148,8 @@ struct str_builder_t
 const size_t FNV_HASH_OFFSET_BASIS = FNV_HASH_32_OFFSET_BASIS;
 const size_t FNV_HASH_PRIME        = FNV_HASH_32_PRIME;
 
+size_t str_hash(str_view_t str);
+
 str_builder_t strb_make(size_t size = 64);
 str_builder_t strb_from(str_view_t str);
 void strb_free(str_builder_t& sb);
