@@ -4,6 +4,15 @@
 
 Every string is both null terminated and has a length field, which makes it very comfortable to use with C's string.h functions.
 
+None of the functions expect the string to be null terminated, which means that you can safely construct a string view from C++'s std::string and still be able to leverage all of the libraries functionsality:
+```cpp
+std::string something = "Get this string from e.g. an API";
+str_view_t str = { something.data(), something.length() };
+
+// Use a function from the library is safe, even though the data is not null-terminated
+str_find_char_index(str);
+```
+
 ## Demo
 
 ```c++
