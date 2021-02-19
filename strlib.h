@@ -127,6 +127,14 @@ inline size_t str_find_char_index(str_view_t str, char ch)
 
 int str_compare(str_view_t str1, str_view_t str2);
 
+// If the given string is null, it just allocates a new string long enough to hold the data. 
+// If the length of the given as the first parameter string is long enough to hold the data,
+// the data is written to the buffer, it is null terminated and the string's length is set to the new length.
+// If the length is higher than the length of the string, a new buffer is allocated for the data.
+// In this case, the given string's buffer will also be freed.
+void str_smart_replace(str_t* str, const char* data, size_t length);
+
+
 struct str_builder_t
 {
     char* chars;

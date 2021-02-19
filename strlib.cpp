@@ -179,6 +179,30 @@ int str_compare(str_view_t str1, str_view_t str2)
     return str1.length - str2.length;
 }
 
+#include <stdio.h>
+
+void str_smart_replace(str_t* str, const char* data, size_t length)
+{
+    if (str_is_null(*str))
+    {
+        *str = str_copy(data, length);
+    }
+    else
+    {
+        if (str->length >= length)
+        {
+            memcpy(str->chars, data, length);
+            str->chars[length] = 0;
+            str->length = length;
+        }
+        else
+        {
+            str_free(*str);
+            *str = str_copy(data, length);
+        }
+    }
+}
+
 size_t str_hash(str_view_t str)
 {
     size_t h = FNV_HASH_OFFSET_BASIS;
