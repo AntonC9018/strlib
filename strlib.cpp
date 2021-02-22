@@ -216,16 +216,13 @@ size_t str_hash(str_view_t str)
         i += sizeof(size_t);
     }
 
+    for (size_t j = 0; j + i < str.length; j++)
+    {
+        h ^= (size_t)(str.chars[i + j]) << j * 8;
+    }
+
     if (i < str.length)
     {
-        // Fill in the rest taking 1 byte at a time 
-        do 
-        {
-            h ^= (size_t)(str.chars[i]) << i * 8;
-            i++;
-        } 
-        while (i < str.length);
-
         h *= FNV_HASH_PRIME;
     }
 
