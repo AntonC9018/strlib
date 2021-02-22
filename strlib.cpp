@@ -206,20 +206,29 @@ void str_smart_replace(str_t* str, const char* data, size_t length)
 size_t str_hash(str_view_t str)
 {
     size_t h = FNV_HASH_OFFSET_BASIS;
-    size_t last_size_index = std::max(str.length - sizeof(size_t), (size_t)0);
-    for (size_t i = 0; i < last_size_index; i += sizeof(size_t))
+    size_t i = 0;
+
+    // Calculate the hash be taking 4 (or 8) bytes
+    while (i + sizeof(size_t) <= str.length)
     {
         h ^= *(size_t*)(str.chars + i);
         h *= FNV_HASH_PRIME;
+        i += sizeof(size_t);
     }
-    for (size_t i = last_size_index; i < str.length; i++)
+
+    if (i < str.length)
     {
-        h ^= (size_t)(str.chars[i]) << i * 8;
-    }
-    if (last_size_index > 0)
-    {
+        // Fill in the rest taking 1 byte at a time 
+        do 
+        {
+            h ^= (size_t)(str.chars[i]) << i * 8;
+            i++;
+        } 
+        while (i < str.length);
+
         h *= FNV_HASH_PRIME;
     }
+
     return h;
 }
 
