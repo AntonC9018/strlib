@@ -203,12 +203,20 @@ void str_smart_replace(str_t* str, const char* data, size_t length)
     }
 }
 
+#define FNV_HASH_64_OFFSET_BASIS 14695981039346656037ULL
+#define FNV_HASH_32_OFFSET_BASIS 2166136261U
+#define FNV_HASH_64_PRIME        1099511628211ULL
+#define FNV_HASH_32_PRIME        16777619U
+
+constexpr size_t FNV_HASH_OFFSET_BASIS = (sizeof(size_t) == 8) ? FNV_HASH_64_OFFSET_BASIS : FNV_HASH_32_OFFSET_BASIS;
+constexpr size_t FNV_HASH_PRIME        = (sizeof(size_t) == 8) ? FNV_HASH_64_PRIME : FNV_HASH_32_PRIME;
+
 size_t str_hash(str_view_t str)
 {
     size_t h = FNV_HASH_OFFSET_BASIS;
     size_t i = 0;
 
-    // Calculate the hash be taking 4 (or 8) bytes
+    // Calculate the hash taking 4 (or 8) bytes at a time
     while (i + sizeof(size_t) <= str.length)
     {
         h ^= *(size_t*)(str.chars + i);
@@ -216,6 +224,7 @@ size_t str_hash(str_view_t str)
         i += sizeof(size_t);
     }
 
+    // Less than 4 (8) bytes remaining, add them one by one
     for (size_t j = 0; j + i < str.length; j++)
     {
         h ^= (size_t)(str.chars[i + j]) << j * 8;

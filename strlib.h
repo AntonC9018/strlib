@@ -142,14 +142,6 @@ struct str_builder_t
     size_t capacity;
 };
 
-#define FNV_HASH_64_OFFSET_BASIS 14695981039346656037ULL
-#define FNV_HASH_32_OFFSET_BASIS 2166136261U
-#define FNV_HASH_64_PRIME        1099511628211ULL
-#define FNV_HASH_32_PRIME        16777619U
-
-constexpr size_t FNV_HASH_OFFSET_BASIS = (sizeof(size_t) == 8) ? FNV_HASH_64_OFFSET_BASIS : FNV_HASH_32_OFFSET_BASIS;
-constexpr size_t FNV_HASH_PRIME        = (sizeof(size_t) == 8) ? FNV_HASH_64_PRIME : FNV_HASH_32_PRIME;;
-
 size_t str_hash(str_view_t str);
 
 str_builder_t strb_make(size_t size = 64);
