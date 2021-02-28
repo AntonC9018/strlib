@@ -168,18 +168,17 @@ bool strb_has_char(str_builder_t& sb, char ch)
     return false;
 }
 
+#define MIN(a, b) ((a) > (b) ? (b) : (a))
+
 int str_compare(str_view_t str1, str_view_t str2)
 {
-    if (str1.length == str2.length)
-    {
-        if (str1.chars == str2.chars)
-            return 0;
-        return memcmp(str1.chars, str2.chars, str1.length);
-    }
-    return str1.length - str2.length;
-}
+    if (str1.chars == str2.chars)
+        return 0;
 
-#include <stdio.h>
+    int result = memcmp(str1.chars, str2.chars, MIN(str1.length, str2.length));
+
+    return result == 0 ? (int)str1.length - (int)str2.length : result;
+}
 
 void str_smart_replace(str_t* str, const char* data, size_t length)
 {
