@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <functional>
-#include <algorithm>
 
 // String with static literal as its buffer or points at another str_t's buffer.
 // Should not be freed.
@@ -43,17 +42,17 @@ inline bool str_is_null(str_view_t str)
     return str.chars == 0;
 }
 
-// Allocates length bytes and fills them with zeros.
+// Allocates length + 1 bytes and fills them with zeros.
 inline char* str_calloc_buffer(size_t length)
 {
     return (char*) calloc(1, length + 1);
 }
-// Allocates length bytes.
+// Allocates length + 1 bytes.
 inline char* str_malloc_buffer(size_t length)
 {
     return (char*) malloc(length + 1);
 }
-// Allocates length bytes and inserts a null character at the end.
+// Allocates length + 1 bytes and inserts a null character at the end.
 inline char* str_alloc_buffer(size_t length)
 {
     char* data = (char*) malloc(length + 1);
@@ -90,7 +89,7 @@ inline str_t str_copy_lit(str_view_t str)
 }
 // Use this to copy a string literal.
 #define str_copy_lit(string) str_copy((string), sizeof((string)) - 1)
-// Wraps a string literal in a strview_t.
+// Wraps a string literal in a str_view_t.
 #define str_lit(string) str_view_t{ (string), sizeof((string)) - 1 }
 
 inline str_view_t str_view(str_t str)
