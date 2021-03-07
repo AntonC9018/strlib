@@ -168,18 +168,17 @@ bool strb_has_char(str_builder_t& sb, char ch)
     return false;
 }
 
+#define MIN(a, b) ((a) > (b) ? (b) : (a))
+
 int str_compare(str_view_t str1, str_view_t str2)
 {
-    if (str1.length == str2.length)
-    {
-        if (str1.chars == str2.chars)
-            return 0;
-        return memcmp(str1.chars, str2.chars, str1.length);
-    }
-    return str1.length - str2.length;
-}
+    if (str1.chars == str2.chars)
+        return 0;
 
-#include <stdio.h>
+    int result = memcmp(str1.chars, str2.chars, MIN(str1.length, str2.length));
+
+    return result == 0 ? (int)str1.length - (int)str2.length : result;
+}
 
 void str_smart_replace(str_t* str, const char* data, size_t length)
 {
@@ -203,23 +202,38 @@ void str_smart_replace(str_t* str, const char* data, size_t length)
     }
 }
 
+#define FNV_HASH_64_OFFSET_BASIS 14695981039346656037ULL
+#define FNV_HASH_32_OFFSET_BASIS 2166136261U
+#define FNV_HASH_64_PRIME        1099511628211ULL
+#define FNV_HASH_32_PRIME        16777619U
+
+constexpr size_t FNV_HASH_OFFSET_BASIS = (sizeof(size_t) == 8) ? FNV_HASH_64_OFFSET_BASIS : FNV_HASH_32_OFFSET_BASIS;
+constexpr size_t FNV_HASH_PRIME        = (sizeof(size_t) == 8) ? FNV_HASH_64_PRIME : FNV_HASH_32_PRIME;
+
 size_t str_hash(str_view_t str)
 {
     size_t h = FNV_HASH_OFFSET_BASIS;
-    size_t last_size_index = std::max(str.length - sizeof(size_t), (size_t)0);
-    for (size_t i = 0; i < last_size_index; i += sizeof(size_t))
+    size_t i = 0;
+
+    // Calculate the hash taking 4 (or 8) bytes at a time
+    while (i + sizeof(size_t) <= str.length)
     {
         h ^= *(size_t*)(str.chars + i);
         h *= FNV_HASH_PRIME;
+        i += sizeof(size_t);
     }
-    for (size_t i = last_size_index; i < str.length; i++)
+
+    // Less than 4 (8) bytes remaining, add them one by one
+    for (size_t j = 0; j + i < str.length; j++)
     {
-        h ^= (size_t)(str.chars[i]) << i * 8;
+        h ^= (size_t)(str.chars[i + j]) << j * 8;
     }
-    if (last_size_index > 0)
+
+    if (i < str.length)
     {
         h *= FNV_HASH_PRIME;
     }
+
     return h;
 }
 
